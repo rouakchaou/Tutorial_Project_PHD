@@ -1,0 +1,16 @@
+name: Test CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: List files
+        run: |
+          echo "Workflow is running!"
+          ls -la
