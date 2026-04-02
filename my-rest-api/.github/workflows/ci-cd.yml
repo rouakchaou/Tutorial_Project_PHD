@@ -15,31 +15,26 @@ jobs:
   # Job 1: Run tests
   test:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-    
-    - name: Install dependencies
-      run: npm ci
-      working-directory: my-rest-api
-    
-    - name: Run linter
-      run: npm run lint
-      working-directory: my-rest-api
-    
-    - name: Run tests
-      run: npm test
-      working-directory: my-rest-api
-    
-    - name: Run security audit
-      run: npm audit --audit-level=moderate
-      working-directory: my-rest-api
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
 
   # Job 2: Build Docker image
   build:
@@ -73,7 +68,7 @@ jobs:
     - name: Build and push Docker image
       uses: docker/build-push-action@v4
       with:
-        context: ./my-rest-api
+        context: .
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
@@ -111,7 +106,7 @@ jobs:
 
   # Job 4: Notify on completion
   notify:
-    needs: [test, build, deploy]
+    needs: [test, build]
     runs-on: ubuntu-latest
     if: always()
     
